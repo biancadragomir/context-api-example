@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import ConfirmationDialog from "./ConfirmationDialog";
+import {
+  ConfirmationDialogProvider,
+  useConfirmationDialog,
+} from "./ConfirmationDialogContext";
 
-function App() {
+const ConfirmationExample = () => {
+  const { isOpen, setDialogState, confirmAction } = useConfirmationDialog();
+
+  const handleButtonClick = () => {
+    setDialogState({
+      isOpen: true,
+      confirmAction: () => console.log("Confirmed"),
+    });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <button onClick={handleButtonClick}>Open Confirmation Dialog</button>
+      {isOpen && (
+        <ConfirmationDialog
+          confirmAction={confirmAction}
+          cancelAction={() =>
+            setDialogState({ isOpen: false, confirmAction: () => null })
+          }
+        />
+      )}
     </div>
   );
-}
+};
+
+const App = () => (
+  <ConfirmationDialogProvider>
+    <ConfirmationExample />
+  </ConfirmationDialogProvider>
+);
 
 export default App;
